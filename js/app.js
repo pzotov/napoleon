@@ -164,6 +164,8 @@
 				form: _.template($('#block_form').html())
 			},
 			render: function () {
+				localforage.setItem('savedModel', JSON.stringify(this.model.toJSON()));
+
 				var state = this.model.get('state');
 				$(this.el).html(this.templates[state](this.model.toJSON()));
 				if(state=='list') {
@@ -176,6 +178,14 @@
 		view = new View({model: viewState, el: app})
 		;
 	Backbone.history.start();
-	viewState.trigger('change');
 
+	localforage.getItem('savedModel', function(err, value){
+		if(!err){
+			value = JSON.parse(value);
+			value.state = 'list';
+			viewState.set(value);
+		}
+		viewState.trigger('change');
+	});
+	//viewState.trigger('change');
 })($('#app'));
