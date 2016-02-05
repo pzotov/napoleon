@@ -181,9 +181,10 @@
 
 	localforage.getItem('savedModel', function(err, value){
 		if(!err){
-			value = JSON.parse(value);
-			value.state = 'list';
-			viewState.set(value);
+			if(value = JSON.parse(value)){
+				value.state = 'list';
+				viewState.set(value);
+			}
 		}
 		viewState.trigger('change');
 	});
